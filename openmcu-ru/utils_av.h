@@ -5,6 +5,7 @@
 #define _MCU_UTILS_AV_H
 
 #include "utils_type.h"
+#include "libavutil/pixfmt.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,12 +21,13 @@
   #define AV_CODEC_ID_MJPEG       CODEC_ID_MJPEG
 #endif
 
+#ifdef ALLOW_DEPRECATED_CODE
 #if LIBAVUTILS_VERSION_INT < AV_VERSION_INT(51,42,0)
   #define AV_PIX_FMT_YUV420P    PIX_FMT_YUV420P
   #define AV_PIX_FMT_YUVJ420P   PIX_FMT_YUVJ420P
   #define AV_PIX_FMT_YUVJ444P   PIX_FMT_YUVJ444P
 #endif
-
+#endif
 
 #define AV_ALIGN 1
 

@@ -210,7 +210,11 @@ BOOL MCU_AVEncodeFrame(AVCodecID codec_id, const void * src, int src_size, void 
   AVCodec *codec = NULL;
   AVFrame *frame = NULL;
   AVPacket pkt = { 0 };
+#ifdef ALLOW_DEPRECATED_CODE
   PixelFormat frame_pix_fmt;
+#else
+  AVPixelFormat frame_pix_fmt;
+#endif
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54,1,0)
   MCUBuffer pkt_buffer(dst_size);
 #endif
@@ -447,7 +451,12 @@ BOOL MCU_AVDecodeFrameFromFile(PString & filename, void *dst, int & dst_size, in
       goto end;
     }
 
-    struct SwsContext *sws_ctx = sws_getContext(frame->width, frame->height, (PixelFormat)frame->format,
+    struct SwsContext *sws_ctx = sws_getContext(frame->width, frame->height, 
+#ifdef ALLOW_DEPRECATED_CODE
+						(PixelFormat)frame->format,
+#else
+						(AVPixelFormat)frame->format,
+#endif
                                                 frame->width, frame->height, AV_PIX_FMT_YUV420P,
                                                 SWS_BILINEAR, NULL, NULL, NULL);
     if(sws_ctx == NULL)
