@@ -225,7 +225,11 @@ H264DecoderContext::H264DecoderContext()
     return;
   }
 
+#ifdef ALLOW_DEPRECATED_CODE
   _outputFrame = avcodec_alloc_frame();
+#else
+  _outputFrame = av_frame_alloc();
+#endif
   if (_outputFrame == NULL) {
     cout << "H264\tDecoder\tFailed to allocate frame for encoder\n";
     return;

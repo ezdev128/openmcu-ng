@@ -129,7 +129,11 @@ FFMPEGCodec::~FFMPEGCodec()
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 0, 0)
     av_free(m_picture);
 #else
+#ifdef ALLOW_DEPRECATED_CODE
     avcodec_free_frame(&m_picture);
+#else
+    av_frame_free(&m_picture);
+#endif
 #endif
   if (m_alignedInputYUV != NULL)
     free(m_alignedInputYUV);
@@ -152,13 +156,21 @@ bool FFMPEGCodec::InitContext()
     return false;
   }
 
+#ifdef ALLOW_DEPRECATED_CODE
   m_picture = avcodec_alloc_frame();
+#else
+  m_picture = av_frame_alloc();
+#endif
   if (m_picture == NULL) {
     PTRACE(1, m_prefix, "Failed to allocate frame for encoder");
     return false;
   }
 
+#ifdef ALLOW_DEPRECATED_CODE
   m_context->pix_fmt = PIX_FMT_YUV420P;
+#else
+  m_context->pix_fmt = AV_PIX_FMT_YUV420P;
+#endif
   m_context->workaround_bugs = FF_BUG_AUTODETECT;
 
   // debugging flags

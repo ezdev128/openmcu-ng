@@ -11,7 +11,11 @@ G7231_DecoderContext::G7231_DecoderContext()
   if (_context == NULL) 
    { cout << "Failed to allocate context for g7231 decoder\n"; return; }
 
+#ifdef ALLOW_DEPRECATED_CODE
   _outputFrame = avcodec_alloc_frame();
+#else
+  _outputFrame = av_frame_alloc();
+#endif
   if (_outputFrame == NULL) 
    { cout << "Failed to allocate frame for g7231 decoder\n"; return; }
 
@@ -57,7 +61,11 @@ int G7231_DecoderContext::DecodeFrames(const BYTE * src, BYTE * dst)
   if (_codec == NULL)
    { cout << "Decoder codec g7231 not initialized\n"; return 0; }
 
+#ifdef ALLOW_DEPRECATED_CODE
   avcodec_get_frame_defaults(_outputFrame);
+#else
+  av_frame_unref(_outputFrame);
+#endif
   _outputFrame->nb_samples  = G7231_SamplesPerFrame;
   memcpy(_pkt.data, src, G7231_BytesPerFrame);
   _pkt.size = G7231_BytesPerFrame;
@@ -88,7 +96,11 @@ G7231_EncoderContext::G7231_EncoderContext()
   if (_context == NULL) 
    { cout << "Failed to allocate context for g7231 encoder\n"; return; }
 
+#ifdef ALLOW_DEPRECATED_CODE
   _inputFrame = avcodec_alloc_frame();
+#else
+  _inputFrame = av_frame_alloc();
+#endif
   if (_inputFrame == NULL) 
    { cout << "Failed to allocate frame for g7231 encoder\n"; return; }
 
@@ -145,7 +157,11 @@ int G7231_EncoderContext::EncodeFrames(const BYTE * src, BYTE * dst)
   if (_codec == NULL)
    { cout << "Encoder codec g7231 not initialized\n"; return 0; }
 
+#ifdef ALLOW_DEPRECATED_CODE
   avcodec_get_frame_defaults(_inputFrame);
+#else
+  av_frame_unref(_inputFrame);
+#endif
   _inputFrame->nb_samples  = G7231_SamplesPerFrame;
   avcodec_fill_audio_frame(_inputFrame, 1, AV_SAMPLE_FMT_S16,
                                             src, 480, 1);
