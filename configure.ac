@@ -404,7 +404,7 @@ dnl check for sofia-sip library
 AC_SUBST(USE_SRC_SOFIASIP, 0)
 AC_SUBST(USE_SYSTEM_SOFIASIP, 1)
 AC_SUBST(LIBSOFIA_DIR, ${top_srcdir}/libs/sofia-sip)
-AC_SUBST(LIBSOFIA_SYSTEM_DIRS, "${INSTALLPREFIX}/${PROG} /usr /usr/local")
+AC_SUBST(LIBSOFIA_SYSTEM_DIRS, "${INSTALLPREFIX} ${INSTALLPREFIX}/${PROG} /usr /usr/local")
 AC_SUBST(SOFIASIP_BUILDOPTS)
 
 # check source 1
@@ -420,6 +420,16 @@ if test ${USE_SRC_SOFIASIP} = 0 ; then
       AC_CHECK_LIB(sofia-sip-ua, nta_agent_create, USE_SYSTEM_SOFIASIP=1, USE_SYSTEM_SOFIASIP=0)
       if test ${USE_SYSTEM_SOFIASIP} = 1 ; then
         MCU_CPPFLAGS="$MCU_CPPFLAGS -I${dir}/include/sofia-sip-1.12";
+        MCU_LDFLAGS="$MCU_LDFLAGS -L${dir}/lib";
+        MCU_RFLAGS="$MCU_RFLAGS -L${dir}/lib";
+      fi
+      break
+    fi
+    AC_CHECK_FILE(${dir}/include/sofia-sip/sip.h, USE_SYSTEM_SOFIASIP=1, USE_SYSTEM_SOFIASIP=0)
+    if test ${USE_SYSTEM_SOFIASIP} = 1 ; then
+      AC_CHECK_LIB(sofia-sip-ua, nta_agent_create, USE_SYSTEM_SOFIASIP=1, USE_SYSTEM_SOFIASIP=0)
+      if test ${USE_SYSTEM_SOFIASIP} = 1 ; then
+        MCU_CPPFLAGS="$MCU_CPPFLAGS -I${dir}/include";
         MCU_LDFLAGS="$MCU_LDFLAGS -L${dir}/lib";
         MCU_RFLAGS="$MCU_RFLAGS -L${dir}/lib";
       fi
