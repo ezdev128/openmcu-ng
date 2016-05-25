@@ -852,6 +852,7 @@ dnl configuration plugins
 h261=yes
 h263=yes
 h264=yes
+h264_nvenc=yes
 mpeg4=yes
 vp8=yes
 vp8_ffmpeg=yes
@@ -870,6 +871,7 @@ AC_ARG_ENABLE(separator, [    ])
 AC_ARG_ENABLE(h261, [AS_HELP_STRING([--disable-h261],[Disable H.261 support (default enabled)],[40],[100])], [h261="$enableval"])
 AC_ARG_ENABLE(h263, [AS_HELP_STRING([--disable-h263],[Disable H.263 support (default enabled)],[40],[100])], [h263="$enableval"])
 AC_ARG_ENABLE(h264, [AS_HELP_STRING([--disable-h264],[Disable H.264 support (default enabled)],[40],[100])], [h264="$enableval"])
+AC_ARG_ENABLE(h264_nvenc, [AS_HELP_STRING([--disable-h264-nvenc],[Disable H.264 hardware acceleration (nVidia) support (default enabled)],[40],[100])], [h264_nvenc="$enableval"])
 AC_ARG_ENABLE(mpeg4, [AS_HELP_STRING([--disable-mpeg4],[Disable MPEG4 support (default enabled)],[40],[100])], [mpeg4="$enableval"])
 AC_ARG_ENABLE(vp8, [AS_HELP_STRING([--disable-vp8],[Disable VP8 support (default enabled)],[40],[100])], [vp8="$enableval"])
 AC_ARG_ENABLE(vp8_ffmpeg, [AS_HELP_STRING([--disable-vp8-ffmpeg],[Disable VP8 ffmpeg decoding (default enabled)],[40],[100])], [vp8_ffmpeg="$enableval"])
@@ -884,7 +886,7 @@ AC_ARG_ENABLE(speex, [AS_HELP_STRING([--disable-speex],[Disable Speex support (d
 AC_ARG_ENABLE(silk, [AS_HELP_STRING([--disable-silk],[Disable SILK support (default enabled)],[40],[100])], [silk="$enableval"])
 AC_ARG_ENABLE(opus, [AS_HELP_STRING([--disable-opus],[Disable OPUS support (default enabled)],[40],[100])], [opus="$enableval"])
 
-PLUGINS="h261 h263 h264 mpeg4 vp8 g722 g7221 g7222 g7231 g726 g729 ilbc silk opus"
+PLUGINS="h261 h263 h264 h264_nvenc mpeg4 vp8 g722 g7221 g7222 g7231 g726 g729 ilbc silk opus"
 AC_SUBST(PLUGINS)
 
 PLUGIN_H261_DIR=${top_srcdir}/plugins/H.261-vic
@@ -916,6 +918,34 @@ if test "${h264}" = "yes"; then
       PLUGIN_DIRS="$PLUGIN_DIRS ${PLUGIN_H264_DIR} "
     fi
 fi
+
+PLUGIN_H264_NVENC_DIR=${top_srcdir}/plugins/H.264_nvenc
+AC_SUBST(PLUGIN_H264_NVENC_DIR)
+if test "${h264_nvenc}" = "yes"; then
+    USE_H264_NVENC=0
+    FOUND_H264_NVENC=0
+    FOUND_H264_NVENC_CUDA=0
+    AC_LANG_PUSH([C])
+    AC_CHECK_HEADERS(x264.h, USE_H264_NVENC=1, [], [-])
+    AC_CHECK_HEADERS(nvenc/nvEncodeAPI.h, FOUND_H264_NVENC=1, [], [-])
+    AC_CHECK_HEADERS(cuda.h, FOUND_H264_NVENC_CUDA=1, [], [-])
+    AC_LANG_POP([C])
+    if test ${USE_H264_NVENC} = 0 ; then
+      h264_nvenc=no
+      AC_MSG_ERROR(x264 headers not found! Install x264 or use option: --disable-h264-nvenc)
+    fi
+    if test ${FOUND_H264_NVENC} = 0 ; then
+      h264_nvenc=no
+      AC_MSG_ERROR(cuda toolkit / nvEncodeAPI headers not found! Install cuda toolkit (https://developer.nvidia.com/cuda-toolkit) or use option: --disable-h264-nvenc)
+    fi
+    if test ${FOUND_H264_NVENC_CUDA} = 0 ; then
+      h264_nvenc=no
+      AC_MSG_ERROR(cuda headers not found! Install cuda toolkit (https://developer.nvidia.com/cuda-toolkit) or use option: --disable-h264-nvenc)
+    fi
+   AC_CONFIG_FILES(plugins/H.264_nvenc/Makefile)
+   PLUGIN_DIRS="$PLUGIN_DIRS ${PLUGIN_H264_NVENC_DIR} "
+fi
+
 
 PLUGIN_MPEG4_DIR=${top_srcdir}/plugins/MPEG4
 AC_SUBST(PLUGIN_MPEG4_DIR)
@@ -1328,6 +1358,11 @@ if test "x${h264}" = "xyes" ; then
 echo "              H.264 Video Plugin  :  enabled"
 else
 echo "              H.264 Video Plugin  :  disabled"
+fi
+if test "x${h264_nvenc}" = "xyes" ; then
+echo "              H.264 Accel. Video  :  enabled"
+else
+echo "              H.264 Accel. Video  :  disabled"
 fi
 if test "x${h263}" = "xyes" ; then
 echo "       H.263/H.263P Video Plugin  :  enabled"
