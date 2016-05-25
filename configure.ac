@@ -710,7 +710,7 @@ AC_SUBST(USE_SRC_SRTP, 0)
 AC_SUBST(USE_SYSTEM_SRTP, 1)
 AC_SUBST(USE_LIBSRTP, 0)
 AC_SUBST(LIBSRTP_DIR, ${top_srcdir}/libs/srtp)
-AC_SUBST(LIBSRTP_SYSTEM_DIRS, "${INSTALLPREFIX}/${PROG} /usr /usr/local")
+AC_SUBST(LIBSRTP_SYSTEM_DIRS, "${INSTALLPREFIX} ${INSTALLPREFIX}/${PROG} /usr /usr/local")
 
 if test "${libsrtp}" = "yes"; then
   # check source 1
