@@ -635,7 +635,7 @@ AC_SUBST(USE_SRC_LIBYUV, 0)
 AC_SUBST(USE_SYSTEM_LIBYUV, 1)
 AC_SUBST(USE_LIBYUV, 0)
 AC_SUBST(LIBYUV_DIR, ${top_srcdir}/libs/libyuv)
-AC_SUBST(LIBYUV_SYSTEM_DIRS, "${INSTALLPREFIX}/${PROG} /usr /usr/local")
+AC_SUBST(LIBYUV_SYSTEM_DIRS, "${INSTALLPREFIX} ${INSTALLPREFIX}/${PROG} /usr /usr/local")
 
 if test "${libyuv}" = "yes"; then
   # check source 1
