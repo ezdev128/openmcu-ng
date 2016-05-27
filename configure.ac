@@ -217,7 +217,8 @@ AC_ARG_WITH(log_prefix, [AS_HELP_STRING([--with-log-prefix],[log directory prefi
 AC_ARG_WITH(pipe_prefix, [AS_HELP_STRING([--with-pipe-prefix],[pipe directory prefix],[40],[100])], [pipe_prefix=$withval])
 AC_ARG_WITH(records_prefix, [AS_HELP_STRING([--with-records-prefix],[records directory prefix],[40],[100])], [records_prefix=$withval])
 
-MCUDIR=openmcu-ru
+#MCUDIR=openmcu-ru
+MCUDIR=
 MCU_DIR=${INSTALLPREFIX}/${MCUDIR}
 MCU_BIN_DIR=${MCU_DIR}/bin
 MCU_FONT_DIR=${MCU_DIR}/font
