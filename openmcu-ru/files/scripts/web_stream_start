@@ -12,18 +12,26 @@
 # http://ip-adress:8090/stream.asx
 #
 
-OPENMCU_DIR=@OPENMCU_DIR@
+OPENMCU_DIR=##OPENMCU_DIR##
 DIR_BIN="${OPENMCU_DIR}/bin"
 DIR_CONF="${OPENMCU_DIR}/config"
 DIR_PIPE="${OPENMCU_DIR}/pipe"
 
 export LD_LIBRARY_PATH="${OPENMCU_DIR}/lib"
 
-${DIR_BIN}/ffserver -f ${DIR_CONF}/ffserver.conf &
+if [ -x "${DIR_BIN}/ffserver" ]; then
+    ${DIR_BIN}/ffserver -f ${DIR_CONF}/ffserver.conf &
+else
+    echo "${DIR_BIN}/ffserver: No such file"
+fi
 
-${DIR_BIN}/ffmpeg -y\
+if [ -x "${DIR_BIN}/ffmpeg" ]; then
+${DIR_BIN}/ffmpeg -y \
  -r 10 -s 4cif -f rawvideo -i ${DIR_PIPE}/video.$1\
  -ar 16000 -f s16le -i ${DIR_PIPE}/sound.$1\
  http://127.0.0.1:8090/feed.ffm
+else
+    echo "${DIR_BIN}/ffserver: No such file"
+fi
 
 kill %1
