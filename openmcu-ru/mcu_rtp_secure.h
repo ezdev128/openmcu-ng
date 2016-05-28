@@ -25,6 +25,8 @@
 #define _MCU_RTP_SECURE_H
 
 #include "utils.h"
+#include "srtp/err.h"
+#include "srtp/srtp.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +47,7 @@ extern zrtp_global_t *zrtp_global;
 
 #if MCUSIP_SRTP
 #define STRP_TRACE_LEVEL 6
-BOOL SRTPError(err_status_t err, const char * fn, const char * file, int line);
+BOOL SRTPError(srtp_err_status_t err, const char * fn, const char * file, int line);
 #define SRTP_ERROR(fn, param) SRTPError(fn param, #fn, __FILE__, __LINE__)
 //#define SRTP_ERROR(fn, param) ((fn param) != err_status_ok)
 #endif

@@ -24,6 +24,9 @@
 
 #include "precompile.h"
 #include "mcu.h"
+#include "srtp/err.h"
+#include "srtp/srtp.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,9 +38,9 @@ zrtp_global_t *zrtp_global = NULL;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #if MCUSIP_SRTP
-BOOL SRTPError(err_status_t err, const char * fn, const char * file, int line)
+BOOL SRTPError(srtp_err_status_t err, const char * fn, const char * file, int line)
 {
-  if(err == err_status_ok)
+  if(err == srtp_err_status_ok)
     return FALSE;
   if(!PTrace::CanTrace(STRP_TRACE_LEVEL))
     return TRUE;
@@ -45,31 +48,31 @@ BOOL SRTPError(err_status_t err, const char * fn, const char * file, int line)
   trace << "SRTP\t" << fn << "() error code " << err << " - ";
   switch(err)
   {
-    case err_status_fail :                 trace << "unspecified failure"; break;
-    case err_status_bad_param :            trace << "unsupported parameter"; break;
-    case err_status_alloc_fail :           trace << "couldn't allocate memory"; break;
-    case err_status_dealloc_fail :         trace << "couldn't deallocate properly"; break;
-    case err_status_init_fail :            trace << "couldn't initialize"; break;
-    case err_status_terminus :             trace << "can't process as much data as requested"; break;
-    case err_status_auth_fail :            trace << "authentication failure"; break;
-    case err_status_cipher_fail :          trace << "cipher failure"; break;
-    case err_status_replay_fail :          trace << "replay check failed (bad index)"; break;
-    case err_status_replay_old :           trace << "replay check failed (index too old)"; break;
-    case err_status_algo_fail :            trace << "algorithm failed test routine"; break;
-    case err_status_no_such_op :           trace << "unsupported operation"; break;
-    case err_status_no_ctx :               trace << "no appropriate context found"; break;
-    case err_status_cant_check :           trace << "unable to perform desired validation"; break;
-    case err_status_key_expired :          trace << "can't use key any more"; break;
-    case err_status_socket_err :           trace << "error in use of socket"; break;
-    case err_status_signal_err :           trace << "error in use POSIX signals"; break;
-    case err_status_nonce_bad :            trace << "nonce check failed"; break;
-    case err_status_read_fail :            trace << "couldn't read data"; break;
-    case err_status_write_fail :           trace << "couldn't write data"; break;
-    case err_status_parse_err :            trace << "error pasring data"; break;
-    case err_status_encode_err :           trace << "error encoding data"; break;
-    case err_status_semaphore_err :        trace << "error while using semaphores"; break;
-    case err_status_pfkey_err :            trace << "error while using pfkey"; break;
-    default :                              trace << "unknown error " << err;
+    case srtp_err_status_fail :                 trace << "unspecified failure"; break;
+    case srtp_err_status_bad_param :            trace << "unsupported parameter"; break;
+    case srtp_err_status_alloc_fail :           trace << "couldn't allocate memory"; break;
+    case srtp_err_status_dealloc_fail :         trace << "couldn't deallocate properly"; break;
+    case srtp_err_status_init_fail :            trace << "couldn't initialize"; break;
+    case srtp_err_status_terminus :             trace << "can't process as much data as requested"; break;
+    case srtp_err_status_auth_fail :            trace << "authentication failure"; break;
+    case srtp_err_status_cipher_fail :          trace << "cipher failure"; break;
+    case srtp_err_status_replay_fail :          trace << "replay check failed (bad index)"; break;
+    case srtp_err_status_replay_old :           trace << "replay check failed (index too old)"; break;
+    case srtp_err_status_algo_fail :            trace << "algorithm failed test routine"; break;
+    case srtp_err_status_no_such_op :           trace << "unsupported operation"; break;
+    case srtp_err_status_no_ctx :               trace << "no appropriate context found"; break;
+    case srtp_err_status_cant_check :           trace << "unable to perform desired validation"; break;
+    case srtp_err_status_key_expired :          trace << "can't use key any more"; break;
+    case srtp_err_status_socket_err :           trace << "error in use of socket"; break;
+    case srtp_err_status_signal_err :           trace << "error in use POSIX signals"; break;
+    case srtp_err_status_nonce_bad :            trace << "nonce check failed"; break;
+    case srtp_err_status_read_fail :            trace << "couldn't read data"; break;
+    case srtp_err_status_write_fail :           trace << "couldn't write data"; break;
+    case srtp_err_status_parse_err :            trace << "error pasring data"; break;
+    case srtp_err_status_encode_err :           trace << "error encoding data"; break;
+    case srtp_err_status_semaphore_err :        trace << "error while using semaphores"; break;
+    case srtp_err_status_pfkey_err :            trace << "error while using pfkey"; break;
+    default :                                   trace << "unknown error " << err;
   }
   trace << PTrace::End;
   return TRUE;
@@ -285,7 +288,7 @@ BOOL SipSRTP::SetCryptoPolicy(const PString & type)
     m_salt_bits = 112;
     m_key_length = srtp_profile_get_master_key_length(m_profile);
     m_salt_length = srtp_profile_get_master_salt_length(m_profile);
-    crypto_policy_set_aes_cm_128_hmac_sha1_80(&m_policy.rtp);
+    srtp_crypto_policy_set_aes_cm_128_hmac_sha1_80(&m_policy.rtp);
     return TRUE;
   }
   else if(type == AES_CM_128_HMAC_SHA1_32)
@@ -295,7 +298,7 @@ BOOL SipSRTP::SetCryptoPolicy(const PString & type)
     m_salt_bits = 32;
     m_key_length = srtp_profile_get_master_key_length(m_profile);
     m_salt_length = srtp_profile_get_master_salt_length(m_profile);
-    crypto_policy_set_aes_cm_128_hmac_sha1_32(&m_policy.rtp);
+    srtp_crypto_policy_set_aes_cm_128_hmac_sha1_32(&m_policy.rtp);
     return TRUE;
   }
   PTRACE(1, "SRTP\tunknown policy!");
@@ -372,10 +375,13 @@ void sip_rtp_shutdown()
 PString srtp_get_random_keysalt()
 {
 #if MCUSIP_SRTP
+/*
   PBYTEArray key_salt(30);
   // set key to random value
   crypto_get_random(key_salt.GetPointer(), 30);
   return PBase64::Encode(key_salt);
+*/
+  return PBase64::Encode(srtp_get_random_keysalt());
 #else
   return "";
 #endif
