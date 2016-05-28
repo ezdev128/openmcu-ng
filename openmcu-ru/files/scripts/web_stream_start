@@ -12,7 +12,7 @@
 # http://ip-adress:8090/stream.asx
 #
 
-OPENMCU_DIR=##OPENMCU_DIR##
+OPENMCU_DIR=@OPENMCU_DIR@
 DIR_BIN="${OPENMCU_DIR}/bin"
 DIR_CONF="${OPENMCU_DIR}/config"
 DIR_PIPE="${OPENMCU_DIR}/pipe"

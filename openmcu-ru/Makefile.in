@@ -95,8 +95,8 @@ install:
 	( for file in ./files/scripts/*; do \
 	    $(INSTALL) -m 755 $(INSTALL_BACKUP_OPTS) $$file $(DESTDIR)@MCU_DIR@/scripts; \
 	done )
-	( for file in $(DESTDIR)@MCU_DIR@/scripts/*; do \
-	    sed -i "s,@OPENMCU_DIR@,$(DESTDIR),g" $$file; \
+	( for file in $(INSTALLPREFIX)/scripts/*; do \
+	    sed -i "s,@OPENMCU_DIR@,$(INSTALLPREFIX),g" $$file; \
 	done )
 	$(INSTALL) -m 755 $(OBJDIR)/$(PROG) $(DESTDIR)@MCU_BIN_DIR@
 #	ln -sf $(DESTDIR)@MCU_BIN_DIR@/$(PROG) /usr/local/bin/$(PROG)
