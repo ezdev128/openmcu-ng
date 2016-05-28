@@ -10,7 +10,7 @@ endif
 if COMPILE_LIBG7221
 	($(MAKE) $(MAKEFLAGS)     -C @LIBG7221_DIR@) || exit $$?
 endif
-	($(MAKE) $(MAKEFLAGS) @MCU_BUILDOPTS@      -C @MCUDIR@) || exit $$?
+	($(MAKE) $(MAKEFLAGS) @MCU_BUILDOPTS@      -C @MCUTARGET@) || exit $$?
 	( for dir in @PLUGIN_DIRS@; \
 		do ($(MAKE) $(MAKEFLAGS) -C $$dir) || exit $$?; \
 	done )
@@ -18,7 +18,7 @@ endif
 ####################################################################################################
 
 install:
-	($(MAKE) install -C @MCUDIR@) || exit $$?
+	($(MAKE) install -C @MCUTARGET@) || exit $$?
 	( for dir in @PLUGIN_DIRS@; \
 		do ($(MAKE) install -C $$dir) || exit $$?; \
 	done )
@@ -32,7 +32,7 @@ endif
 ####################################################################################################
 
 uninstall:
-	($(MAKE) uninstall -C @MCUDIR@) || exit $$?
+	($(MAKE) uninstall -C @MCUTARGET@) || exit $$?
 	( for dir in @PLUGIN_DIRS@; \
 		do ($(MAKE) uninstall -C $$dir) || exit $$?; \
 	done )
@@ -53,7 +53,7 @@ if COMPILE_PTLIB
 	($(MAKE) clean -C @PTLIBDIR@) || exit $$?
 	($(MAKE) clean -C @H323PLUSDIR@) || exit $$?
 endif
-	($(MAKE) clean -C @MCUDIR@) || exit $$?
+	($(MAKE) clean -C @MCUTARGET@) || exit $$?
 	( for dir in @PLUGIN_DIRS@; \
 		do ($(MAKE) clean -C $$dir) || exit $$?; \
 	done )

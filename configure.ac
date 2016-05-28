@@ -218,6 +218,7 @@ AC_ARG_WITH(pipe_prefix, [AS_HELP_STRING([--with-pipe-prefix],[pipe directory pr
 AC_ARG_WITH(records_prefix, [AS_HELP_STRING([--with-records-prefix],[records directory prefix],[40],[100])], [records_prefix=$withval])
 
 #MCUDIR=openmcu-ru
+MCUTARGET=openmcu-ru
 MCUDIR=
 MCU_DIR=${INSTALLPREFIX}/${MCUDIR}
 MCU_BIN_DIR=${MCU_DIR}/bin
@@ -251,6 +252,7 @@ else
 fi
 
 AC_SUBST(MCUDIR)
+AC_SUBST(MCUTARGET)
 AC_SUBST(MCU_DIR)
 AC_SUBST(MCU_BIN_DIR)
 AC_SUBST(MCU_CONFIG_DIR)
