@@ -1,0 +1,6 @@
+#!/bin/bash
+
+OPENMCU_DIR=@OPENMCU_DIR@
+
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OPENMCU_DIR}/lib
+${OPENMCU_DIR}/bin/openmcu-ru $*

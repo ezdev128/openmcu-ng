@@ -82,6 +82,7 @@ install:
 	mkdir -p $(DESTDIR)@MCU_RESOURCE_DIR@
 	mkdir -p $(DESTDIR)@MCU_SSL_DIR@
 	mkdir -p $(DESTDIR)@MCU_DIR@/scripts
+	mkdir -p $(DESTDIR)@MCU_DIR@/docs
 	( for file in ./files/conf/*; do \
 	    $(INSTALL) -m 644 $(INSTALL_BACKUP_OPTS) $$file $(DESTDIR)@MCU_CONFIG_DIR@; \
 	done )
@@ -94,12 +95,15 @@ install:
 	( for file in ./files/scripts/*; do \
 	    $(INSTALL) -m 755 $(INSTALL_BACKUP_OPTS) $$file $(DESTDIR)@MCU_DIR@/scripts; \
 	done )
+	( for file in $(DESTDIR)@MCU_DIR@/scripts/*; do \
+	    sed -i "s,@OPENMCU_DIR@,$(DESTDIR),g" $$file; \
+	done )
 	$(INSTALL) -m 755 $(OBJDIR)/$(PROG) $(DESTDIR)@MCU_BIN_DIR@
 #	ln -sf $(DESTDIR)@MCU_BIN_DIR@/$(PROG) /usr/local/bin/$(PROG)
-	$(INSTALL) -m 644 ../AUTHORS $(DESTDIR)@MCU_DIR@
-	$(INSTALL) -m 644 ../COPYING $(DESTDIR)@MCU_DIR@
-	$(INSTALL) -m 644 ../NEWS $(DESTDIR)@MCU_DIR@
-	$(INSTALL) -m 644 ../README $(DESTDIR)@MCU_DIR@
+	$(INSTALL) -m 644 ../AUTHORS $(DESTDIR)@MCU_DIR@/docs
+	$(INSTALL) -m 644 ../COPYING $(DESTDIR)@MCU_DIR@/docs
+	$(INSTALL) -m 644 ../NEWS $(DESTDIR)@MCU_DIR@/docs
+	$(INSTALL) -m 644 ../README $(DESTDIR)@MCU_DIR@/docs
 
 uninstall:
 	rm -rf $(DESTDIR)@MCU_FONT_DIR@
@@ -107,10 +111,10 @@ uninstall:
 	rm -rf $(DESTDIR)@MCU_PIPE_DIR@
 	rm -rf $(DESTDIR)@MCU_RESOURCE_DIR@
 	rm -rf $(DESTDIR)@MCU_DIR@/scripts
-	rm -f $(DESTDIR)@MCU_DIR@/AUTHORS
-	rm -f $(DESTDIR)@MCU_DIR@/COPYING
-	rm -f $(DESTDIR)@MCU_DIR@/NEWS
-	rm -f $(DESTDIR)@MCU_DIR@/README
+	rm -f $(DESTDIR)@MCU_DIR@/docs/AUTHORS
+	rm -f $(DESTDIR)@MCU_DIR@/docs/COPYING
+	rm -f $(DESTDIR)@MCU_DIR@/docs/NEWS
+	rm -f $(DESTDIR)@MCU_DIR@/docs/README
 	rm -f $(DESTDIR)@MCU_BIN_DIR@/$(PROG)
 #	rm -f /usr/local/bin/$(PROG)
 
