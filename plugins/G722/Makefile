@@ -32,6 +32,8 @@ Q_CC = @echo [CC] `echo $< | sed s^@OPALDIR@/^^` ;
 Q_LD = @echo [LD] `echo $(PLUGIN) | sed s^@OPALDIR@/^^` ;
 endif
 
+Q_CC=
+Q_LD=
 
 $(OBJDIR)/%.o : %.c
 	@mkdir -p $(OBJDIR) >/dev/null 2>&1

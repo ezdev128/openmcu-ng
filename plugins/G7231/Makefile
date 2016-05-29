@@ -16,6 +16,8 @@ STDCCFLAGS     +=-fPIC -D__STDC_CONSTANT_MACROS
 LDFLAGS	       +=-L/opt/openmcu-ru/lib -lavutil -lavcodec
 CPPFLAGS       +=-I/opt/openmcu-ru/include
 OPTCCFLAGS      =$(CPPFLAGS)
+Q_CC            =
+Q_LD            =
 
 SRCS	+= g7231codec.cxx
 

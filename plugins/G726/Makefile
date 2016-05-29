@@ -69,6 +69,8 @@ PLUGINEXT	=so
 CFLAGS	       +=-g -O2 
 STDCCFLAGS     +=-fPIC -D__STDC_CONSTANT_MACROS
 LDFLAGS	       +=
+Q_CC            =
+Q_LD            =
 
 SRCS	+= g726codec.c \
 	   g711.c \

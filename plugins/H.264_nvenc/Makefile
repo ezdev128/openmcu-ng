@@ -93,6 +93,8 @@ LDFLAGS	       +=-L/opt/openmcu-ru/lib -lavcodec -lavutil
 CPPFLAGS       +=-I/opt/openmcu-ru/include
 OPTCCFLAGS      =$(CPPFLAGS)
 LIBAVCODEC_CFLAGS=-I${prefix}/include
+Q_CC            =
+Q_LD            =
 
 EXTRACCFLAGS    +=  $(LIBAVCODEC_CFLAGS) -I$(PLUGINDIR) -DLIB_DIR='"$(prefix)"' -DVC_PLUGIN_DIR='"$(VC_PLUGIN_DIR)"' -DLICENCE_MPL
 

@@ -46,6 +46,9 @@ SONAME	= g729
 SRCDIR	= ./g729a_v11
 OBJDIR	= ./obj
 
+Q_CC    =
+Q_LD    =
+
 HEADERS = \
 	$(SRCDIR)/basic_op.h \
 	$(SRCDIR)/dec_gain.h \

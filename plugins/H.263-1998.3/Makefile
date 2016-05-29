@@ -44,6 +44,8 @@ CPPFLAGS       +=-I/opt/openmcu-ru/include
 OPTCCFLAGS      =$(CPPFLAGS)
 EXTRACFLAGS	= -I$(PLUGINDIR)
 LIBAVCODEC_CFLAGS=-I${prefix}/include
+Q_CC            =
+Q_LD            =
 
 # HAVE_LIBAVCODEC_RTP_MODE=1
 

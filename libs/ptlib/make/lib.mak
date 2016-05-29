@@ -216,8 +216,7 @@ ifeq ($(P_SHAREDLIB),1)
 	@echo EXTLIBS = $(EXTLIBS)
 	@echo SYSLIBS = $(SYSLIBS)
 	@if [ ! -d $(LIBDIR) ] ; then mkdir $(LIBDIR) ; fi
-	@echo [LD] $@
-	@$(LD) $(LDSOOPTS) -o $(LIBDIR)/$(LIBNAME_PAT) $(LDFLAGS) $(EXTLIBS) $(OBJS) $(ENDLDLIBS)
+	$(LD) $(LDSOOPTS) -o $(LIBDIR)/$(LIBNAME_PAT) $(LDFLAGS) $(EXTLIBS) $(OBJS) $(ENDLDLIBS)
 
   install: $(LIBDIR)/$(LIBNAME_PAT)
 	$(INSTALL) $(LIBDIR)/$(LIBNAME_PAT) $(INSTALLLIB_DIR)/$(LIBNAME_PAT)
@@ -229,8 +228,7 @@ endif # P_SHAREDLIB
 
 $(STATIC_LIB_FILE): $(OBJS)
 	@if [ ! -d $(LIBDIR) ] ; then mkdir $(LIBDIR) ; fi
-	@echo [AR] $@
-	@$(ARCHIVE) $(STATIC_LIB_FILE) $(OBJS)
+	$(ARCHIVE) $(STATIC_LIB_FILE) $(OBJS)
 ifeq ($(P_USE_RANLIB),1)
 	$(RANLIB) $(STATIC_LIB_FILE)
 endif

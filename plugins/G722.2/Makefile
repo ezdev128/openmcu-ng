@@ -15,6 +15,9 @@ LDFLAGS	       +=
 CPPFLAGS       +=
 OPTCCFLAGS      = $(CPPFLAGS)
 EXTRACFLAGS     =
+Q_CC            =
+Q_LD            =
+
 
 SRCDIR := AMR-WB
 SRCS   := g7222.cxx \

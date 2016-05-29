@@ -15,6 +15,8 @@ LDFLAGS	       += @LIBG7221_LDFLAGS@
 CPPFLAGS       += @LIBG7221_CPPFLAGS@
 OPTCCFLAGS      = $(CPPFLAGS)
 EXTRACFLAGS     =
+Q_CC            =
+Q_LD            =
 
 SRCS   := g7221.cxx
 
@@ -32,7 +34,6 @@ $(OBJDIR)/%.o : %.cxx
 PLUGIN	= ./$(SONAME)_audio_pwplugin.$(PLUGINEXT)
 
 OBJECTS = $(addprefix $(OBJDIR)/,$(patsubst %.c,%.o,$(patsubst %.cxx,%.o,$(notdir $(SRCS)))))
-
 
 all: $(PLUGIN)
 
